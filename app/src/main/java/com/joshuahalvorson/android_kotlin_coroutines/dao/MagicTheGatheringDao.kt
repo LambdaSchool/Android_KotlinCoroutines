@@ -1,5 +1,6 @@
 package com.joshuahalvorson.android_kotlin_coroutines.dao
 
+import android.support.annotation.WorkerThread
 import com.joshuahalvorson.android_kotlin_coroutines.model.Card
 import com.joshuahalvorson.android_kotlin_coroutines.model.CardsList
 import com.joshuahalvorson.android_kotlin_coroutines.network.NetworkAdapter
@@ -21,6 +22,15 @@ object MagicTheGatheringDao{
                 }
             }
         })
+    }
 
+    @WorkerThread
+    suspend fun getCards(): List<Card>{
+        val (success, result) = NetworkAdapter.httpGetRequest(CARDS_URL)
+        var cardList: CardsList? = null
+        if(success){
+            cardList = Json.parse(CardsList.serializer(), result)
+        }
+        return cardList?.cards ?: listOf()
     }
 }

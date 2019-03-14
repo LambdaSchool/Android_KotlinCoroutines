@@ -11,18 +11,34 @@ import com.joshuahalvorson.android_kotlin_coroutines.R
 import com.joshuahalvorson.android_kotlin_coroutines.dao.MagicTheGatheringDao
 import com.joshuahalvorson.android_kotlin_coroutines.model.Card
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.*
 
 class CardsListAdapter(val activity: Activity): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val cardList = mutableListOf<Card>()
 
+    private val adapter = this
+    private val dataJob = Job()
+    private val dataScope = CoroutineScope(Dispatchers.IO + dataJob)
+
     init {
-        MagicTheGatheringDao.getCards(object : MagicTheGatheringDao.CardsCallback {
+        /*MagicTheGatheringDao.getCards(object : MagicTheGatheringDao.CardsCallback {
             override fun callback(list: List<Card>) {
                 cardList.addAll(list)
                 activity.runOnUiThread { notifyDataSetChanged() }
             }
-        })
+        })*/
+        getCards()
+    }
+
+    private fun getCards(){
+        dataScope.launch {
+            val cardsList = MagicTheGatheringDao.getCards()
+            cardList.addAll(cardsList)
+            withContext(Dispatchers.Main){
+                notifyDataSetChanged()
+            }
+        }
     }
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view){
