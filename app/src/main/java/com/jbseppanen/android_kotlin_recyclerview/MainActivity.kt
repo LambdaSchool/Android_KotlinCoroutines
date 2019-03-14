@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
 
-        val viewAdapter = DiversionListAdapter(this)
+        val viewAdapter = DiversionListAdapter()
         val viewManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
         findViewById<RecyclerView>(R.id.recycler_view).apply {
             setHasFixedSize(false)
