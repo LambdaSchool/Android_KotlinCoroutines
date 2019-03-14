@@ -1,5 +1,7 @@
 package com.joshuahalvorson.android_kotlin_coroutines.network
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.support.annotation.WorkerThread
 import java.io.BufferedReader
 import java.io.IOException
@@ -10,6 +12,8 @@ import java.net.MalformedURLException
 import java.net.URL
 
 object NetworkAdapter {
+    private val TIMEOUT = 3000
+
     interface NetworkCallback {
         fun returnResult(success: Boolean?, result: String)
     }
@@ -109,5 +113,41 @@ object NetworkAdapter {
 
                 return success to result
             }
+    }
+
+    @WorkerThread
+    suspend fun httpImageRequest(urlString: String): Bitmap? {
+        var image: Bitmap? = null
+        var stream: InputStream? = null
+        var connection: HttpURLConnection? = null
+        try {
+            val url = URL(urlString)
+            connection = url.openConnection() as HttpURLConnection
+            connection.readTimeout = TIMEOUT
+            connection.connectTimeout = TIMEOUT
+            connection.connect()
+            val responseCode = connection.responseCode
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                stream = connection.inputStream
+                if (stream != null) {
+                    image = BitmapFactory.decodeStream(stream)
+                }
+            } else {
+                throw IOException("HTTP Error code: $responseCode")
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } finally {
+            if (stream != null) {
+                try {
+                    stream.close()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+
+            }
+            connection?.disconnect()
+        }
+        return image
     }
 }

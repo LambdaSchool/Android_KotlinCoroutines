@@ -1,12 +1,16 @@
 package com.joshuahalvorson.android_kotlin_coroutines.adapter
 
 import android.app.Activity
+import android.content.Intent
+import android.support.v4.content.ContextCompat.startActivity
+import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.joshuahalvorson.android_kotlin_coroutines.CardDetailActivity
 import com.joshuahalvorson.android_kotlin_coroutines.R
 import com.joshuahalvorson.android_kotlin_coroutines.dao.MagicTheGatheringDao
 import com.joshuahalvorson.android_kotlin_coroutines.model.Card
@@ -42,8 +46,8 @@ class CardsListAdapter(val activity: Activity): RecyclerView.Adapter<RecyclerVie
     }
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view){
-        val cardImage: ImageView = view.findViewById(R.id.element_card_image)
         val cardName: TextView = view.findViewById(R.id.element_card_name)
+        val parent: CardView = view.findViewById(R.id.parent_view)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -55,9 +59,11 @@ class CardsListAdapter(val activity: Activity): RecyclerView.Adapter<RecyclerVie
         val card = cardList[index]
         val cardHolder = viewHolder as ViewHolder
         cardHolder.cardName.text = card.name
-        Picasso.get()
-            .load(card.imageUrl)
-            .into(viewHolder.cardImage)
+        cardHolder.parent.setOnClickListener {
+            val intent = Intent(activity.applicationContext, CardDetailActivity::class.java)
+            intent.putExtra("card", card.imageUrl)
+            startActivity(cardHolder.parent.context, intent, null)
+        }
     }
 
     override fun getItemCount(): Int {

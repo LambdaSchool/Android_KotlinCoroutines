@@ -1,5 +1,6 @@
 package com.joshuahalvorson.android_kotlin_coroutines.dao
 
+import android.graphics.Bitmap
 import android.support.annotation.WorkerThread
 import com.joshuahalvorson.android_kotlin_coroutines.model.Card
 import com.joshuahalvorson.android_kotlin_coroutines.model.CardsList
@@ -32,5 +33,11 @@ object MagicTheGatheringDao{
             cardList = Json.parse(CardsList.serializer(), result)
         }
         return cardList?.cards ?: listOf()
+    }
+
+    @WorkerThread
+    suspend fun getCardImage(imageUrl: String): Bitmap?{
+        val bitmap = NetworkAdapter.httpImageRequest(imageUrl)
+       return bitmap
     }
 }
