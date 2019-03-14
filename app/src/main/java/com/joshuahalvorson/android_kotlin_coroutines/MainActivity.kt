@@ -1,10 +1,10 @@
-package com.joshuahalvorson.android_kotlin_recyclerview
+package com.joshuahalvorson.android_kotlin_coroutines
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import com.joshuahalvorson.android_kotlin_recyclerview.adapter.CardsListAdapter
+import com.joshuahalvorson.android_kotlin_coroutines.adapter.CardsListAdapter
 
 class MainActivity : AppCompatActivity() {
 

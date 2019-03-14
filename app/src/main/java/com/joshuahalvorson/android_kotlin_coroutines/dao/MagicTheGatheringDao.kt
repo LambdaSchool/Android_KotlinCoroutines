@@ -1,10 +1,9 @@
-package com.joshuahalvorson.android_kotlin_recyclerview.dao
+package com.joshuahalvorson.android_kotlin_coroutines.dao
 
-import com.joshuahalvorson.android_kotlin_recyclerview.model.Card
-import com.joshuahalvorson.android_kotlin_recyclerview.model.CardsList
-import com.joshuahalvorson.android_kotlin_recyclerview.network.NetworkAdapter
+import com.joshuahalvorson.android_kotlin_coroutines.model.Card
+import com.joshuahalvorson.android_kotlin_coroutines.model.CardsList
+import com.joshuahalvorson.android_kotlin_coroutines.network.NetworkAdapter
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.set
 
 object MagicTheGatheringDao{
     const val CARDS_URL = "https://api.magicthegathering.io/v1/cards?pageSize=1&page=1231"

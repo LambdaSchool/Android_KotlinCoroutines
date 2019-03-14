@@ -1,4 +1,4 @@
-package com.joshuahalvorson.android_kotlin_recyclerview.adapter
+package com.joshuahalvorson.android_kotlin_coroutines.adapter
 
 import android.app.Activity
 import android.support.v7.widget.RecyclerView
@@ -7,9 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.joshuahalvorson.android_kotlin_recyclerview.R
-import com.joshuahalvorson.android_kotlin_recyclerview.dao.MagicTheGatheringDao
-import com.joshuahalvorson.android_kotlin_recyclerview.model.Card
+import com.joshuahalvorson.android_kotlin_coroutines.R
+import com.joshuahalvorson.android_kotlin_coroutines.dao.MagicTheGatheringDao
+import com.joshuahalvorson.android_kotlin_coroutines.model.Card
 import com.squareup.picasso.Picasso
 
 class CardsListAdapter(val activity: Activity): RecyclerView.Adapter<RecyclerView.ViewHolder>() {

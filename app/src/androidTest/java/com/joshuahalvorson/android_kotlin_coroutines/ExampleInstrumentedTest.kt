@@ -1,4 +1,4 @@
-package com.joshuahalvorson.android_kotlin_recyclerview
+package com.joshuahalvorson.android_kotlin_coroutines
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4

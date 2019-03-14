@@ -1,4 +1,4 @@
-package com.joshuahalvorson.android_kotlin_recyclerview.network
+package com.joshuahalvorson.android_kotlin_coroutines.network
 
 import java.io.BufferedReader
 import java.io.IOException

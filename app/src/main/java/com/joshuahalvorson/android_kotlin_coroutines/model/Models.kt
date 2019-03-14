@@ -1,5 +1,6 @@
-package com.joshuahalvorson.android_kotlin_recyclerview.model
+package com.joshuahalvorson.android_kotlin_coroutines.model
 
+import kotlinx.serialization.Optional
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -19,7 +20,8 @@ data class Card(
     val rarity: String? = "",
     val set: String? = "",
     val setName: String? = "",
-    //val text: String? = "",
+    @Optional
+    val text: String? = "",
     val flavor: String? = "",
     val artist: String? = "",
     val number: String? = "",
@@ -28,11 +30,13 @@ data class Card(
     val layout: String? = "",
     val multiverseid: Int? = -1,
     val imageUrl: String? = "",
-    //val variations: List<String>? = listOf(String()),
+    @Optional
+    val variations: List<String>? = listOf(String()),
     val rulings: List<Any>? =  listOf(Any()),
     val foreignNames: List<ForeignName>? = listOf(ForeignName()),
     val printings: List<String>? = listOf(String()),
-    //val originalText: String? = "",
+    @Optional
+    val originalText: String? = "",
     val originalType: String? = "",
     val legalities: List<Legalities>? = listOf(Legalities()),
     val id: String? = ""
