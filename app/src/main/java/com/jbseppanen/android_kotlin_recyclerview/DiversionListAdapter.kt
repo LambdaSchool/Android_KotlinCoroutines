@@ -1,11 +1,15 @@
 package com.jbseppanen.android_kotlin_recyclerview
 
+import android.content.Intent
+import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import kotlinx.coroutines.*
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 
 const val TYPE_FOOTER = 0
 const val TYPE_ITEM = 1
@@ -79,9 +83,18 @@ class DiversionListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             getItems(5)
         }
 
+
         if(getItemViewType(index) == TYPE_ITEM) {
             val element = data[index]
             val diversionHolder = viewHolder as DiversionItemViewHolder
+
+            diversionHolder.itemView.setOnClickListener{
+                val intent = Intent(diversionHolder.itemView.context, DetailActivity::class.java)
+                val elementAsString = Json.stringify(Diversion.serializer(),element)
+                intent.putExtra(DetailActivity.DETAIL_ITEM,elementAsString)
+                startActivity(diversionHolder.itemView.context,intent,null)
+
+            }
 
             diversionHolder.diversionNameView.text = element.activity
             val cost: String = when {
