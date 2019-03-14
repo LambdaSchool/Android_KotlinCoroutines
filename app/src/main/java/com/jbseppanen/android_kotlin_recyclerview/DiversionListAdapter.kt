@@ -6,34 +6,56 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import kotlinx.coroutines.*
 
-class DiversionListAdapter(val activity: Activity) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class DiversionListAdapter(val activity: Activity) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     class DiversionItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val diversionNameView: TextView = view.findViewById(R.id.text_diversion_name)
         val diversionPriceView: TextView = view.findViewById(R.id.text_diversion_price)
     }
 
-    val data = mutableListOf<Diversion>()
+    private val dataJob = Job()
+    private val dataScope = CoroutineScope(Dispatchers.IO + dataJob)
 
+    private val data = mutableListOf<Diversion>()
+
+    private val adapter = this
 
     init {
         getItems(15)
     }
 
-    fun getItems(qtyToGet: Int) {
-        for (i in 0..qtyToGet) {
-            DataDao.getDiversions(object : DataDao.DataCallback {
+    private fun getItems(qtyToGet: Int) {
+        dataScope.launch {
+            for (i in 0..qtyToGet) {
+                val diversion = DataDao.getDiversion()
+                if(diversion!=null) {
+                    data.add(diversion)
+                    withContext(Dispatchers.Main) {
+                        notifyDataSetChanged()
+                    }
+                }
+
+/*            DataDao.getDiversionsWithCallback(object : DataDao.DataCallback {
                 override fun callback(diversion: Diversion) {
                     data.add(diversion)
                     activity.runOnUiThread { notifyDataSetChanged() }
                 }
-            })
+            })*/
+            }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return DiversionItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.diversion_item_layout, parent, false))
+        return DiversionItemViewHolder(
+            LayoutInflater.from(parent.context).inflate(
+                R.layout.diversion_item_layout,
+                parent,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, index: Int) {
