@@ -7,25 +7,6 @@ object DataDao {
     private const val API_URL = "http://www.boredapi.com/api/activity/"
     private const val KEY_URL = "?key="
 
-    interface DataCallback {
-        fun callback(diversion: Diversion)
-    }
-
-    fun getDiversionsWithCallback(callback: DataCallback) {
-        NetworkAdapter.httpRequestWCallback(
-            API_URL,
-            NetworkAdapter.GET,
-            "",
-            object : NetworkAdapter.NetworkCallback {
-                override fun returnResult(success: Boolean?, result: String) {
-                    if (success == true) {
-                        val diversion = Json.nonstrict.parse(Diversion.serializer(), result)
-                        callback.callback(diversion)
-                    }
-                }
-            })
-    }
-
 
     fun getRandomDiversion(): Diversion? {
         val (success, result) = NetworkAdapter.httpRequest(API_URL, NetworkAdapter.GET, "")

@@ -92,8 +92,6 @@ class DiversionListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
             diversionHolder.itemView.setOnClickListener{
                 val intent = Intent(diversionHolder.itemView.context, DetailActivity::class.java)
-//                val elementAsString = Json.stringify(Diversion.serializer(),element)
-//                intent.putExtra(DetailActivity.DETAIL_ITEM,elementAsString)
                 intent.putExtra(DetailActivity.DETAIL_ITEM,element.key)
                 startActivity(diversionHolder.itemView.context,intent,null)
 

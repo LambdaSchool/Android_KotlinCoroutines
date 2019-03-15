@@ -18,13 +18,6 @@ class DetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
-
-/*
-        val diversion = Json.nonstrict.parse(
-            Diversion.serializer(), intent.getStringExtra(DETAIL_ITEM)
-        )
-*/
-
         val diversionKey = intent.getStringExtra(DETAIL_ITEM)
 
         val dataJob = Job()
