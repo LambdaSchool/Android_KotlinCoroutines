@@ -8,8 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import kotlinx.coroutines.*
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
 
 const val TYPE_FOOTER = 0
 const val TYPE_ITEM = 1
@@ -37,7 +35,7 @@ class DiversionListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private fun getItems(qtyToGet: Int) {
         dataScope.launch {
             for (i in 0..qtyToGet) {
-                val diversion = DataDao.getDiversion()
+                val diversion = DataDao.getRandomDiversion()
                 if (diversion != null) {
                     data.add(diversion)
                     withContext(Dispatchers.Main) {
@@ -90,8 +88,9 @@ class DiversionListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
             diversionHolder.itemView.setOnClickListener{
                 val intent = Intent(diversionHolder.itemView.context, DetailActivity::class.java)
-                val elementAsString = Json.stringify(Diversion.serializer(),element)
-                intent.putExtra(DetailActivity.DETAIL_ITEM,elementAsString)
+//                val elementAsString = Json.stringify(Diversion.serializer(),element)
+//                intent.putExtra(DetailActivity.DETAIL_ITEM,elementAsString)
+                intent.putExtra(DetailActivity.DETAIL_ITEM,element.key)
                 startActivity(diversionHolder.itemView.context,intent,null)
 
             }
