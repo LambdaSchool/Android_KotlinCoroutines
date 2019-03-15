@@ -2,6 +2,7 @@ package com.jbseppanen.android_kotlin_recyclerview
 
 import android.content.Intent
 import android.support.v4.content.ContextCompat.startActivity
+import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -29,19 +30,22 @@ class DiversionListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val adapter = this
 
     init {
-        getItems(15)
+        getItems(5)
     }
 
     private fun getItems(qtyToGet: Int) {
         dataScope.launch {
+            val oldData = mutableListOf<Diversion>()
+            oldData.addAll(data)
             for (i in 0..qtyToGet) {
                 val diversion = DataDao.getRandomDiversion()
                 if (diversion != null) {
                     data.add(diversion)
-                    withContext(Dispatchers.Main) {
-                        notifyDataSetChanged()
-                    }
                 }
+            }
+            val diffResult = DiffUtil.calculateDiff(CharacterDiffTool(oldData, data))
+            withContext(Dispatchers.Main) {
+                diffResult.dispatchUpdatesTo(adapter)
             }
         }
     }
@@ -109,4 +113,22 @@ class DiversionListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         return data.size + 1//add one for the footer
     }
 
+}
+
+class CharacterDiffTool(private val oldData: List<Diversion>, private val newData: List<Diversion>): DiffUtil.Callback() {
+    override fun areItemsTheSame(p0: Int, p1: Int): Boolean {
+        return oldData[p0].key == newData[p1].key
+    }
+
+    override fun getOldListSize(): Int {
+        return oldData.size
+    }
+
+    override fun getNewListSize(): Int {
+        return newData.size
+    }
+
+    override fun areContentsTheSame(p0: Int, p1: Int): Boolean {
+        return oldData[p0] == newData[p1]
+    }
 }
