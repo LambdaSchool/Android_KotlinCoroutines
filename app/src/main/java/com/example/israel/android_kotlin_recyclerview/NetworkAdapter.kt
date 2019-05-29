@@ -60,11 +60,9 @@ class NetworkAdapter {
                 val reader = BufferedReader(InputStreamReader(httpsURLConnection.inputStream))
                 val builder = StringBuilder()
 
-                var line: String?
-                do {
-                    line = reader.readLine()
-                    builder.append(line)
-                } while (line != null)
+                reader.forEachLine {
+                    builder.append(it)
+                }
 
                 responseCallback(httpsURLConnection.responseCode, builder.toString())
 
@@ -88,5 +86,7 @@ class NetworkAdapter {
 
             responseCallback(-1, null)
         }
+
+        fun isSuccessful(code: Int) = code in 200..299
     }
 }
