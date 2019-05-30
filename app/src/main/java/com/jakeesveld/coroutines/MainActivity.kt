@@ -26,16 +26,19 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = listAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        dataScope.launch {
-            var resultString: String = ""
-            withContext(Dispatchers.IO){
-                resultString = NetworkAdapter.httpGetRequest(apiURL)
+        for(i in 0..25) {
+
+            dataScope.launch {
+                var resultString: String = ""
+                withContext(Dispatchers.IO) {
+                    resultString = NetworkAdapter.httpGetRequest("$apiURL?page=$i")
+                }
+                val charactersList = Json.parse(Base.serializer(), resultString)
+
+                charactersList.results?.forEach { characterList.add(it) }
+
+                listAdapter.notifyDataSetChanged()
             }
-            val charactersList = Json.parse(Base.serializer(), resultString)
-
-            charactersList.results?.forEach { characterList.add(it) }
-
-            listAdapter.notifyDataSetChanged()
         }
 
 
