@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
             dataScope.launch {
                 var resultString: String = ""
                 withContext(Dispatchers.IO) {
-                    resultString = NetworkAdapter.httpGetRequest("$apiURL?page=$i")
+                    resultString = NetworkAdapter.okHttpGetRequest("$apiURL?page=$i")
                 }
                 val charactersList = Json.parse(Base.serializer(), resultString)
 

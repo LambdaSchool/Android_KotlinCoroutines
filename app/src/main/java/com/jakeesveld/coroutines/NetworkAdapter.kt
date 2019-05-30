@@ -1,8 +1,10 @@
 package com.jakeesveld.coroutines
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+
 import android.support.annotation.WorkerThread
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStream
@@ -10,7 +12,23 @@ import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.MalformedURLException
 import java.net.URL
+
 object NetworkAdapter {
+
+    @WorkerThread
+    fun okHttpGetRequest(urlString: String): String {
+        val client = OkHttpClient()
+        val request: Request = Request.Builder().url(urlString).build()
+
+        try {
+            val response: Response = client.newCall(request).execute()
+            val result = response.body?.string()
+            result.let { return result!! }
+        } catch (e: Throwable) {
+            e.printStackTrace()
+        }
+        return "failed"
+    }
 
     @WorkerThread
     fun httpGetRequest(urlString: String): String {
