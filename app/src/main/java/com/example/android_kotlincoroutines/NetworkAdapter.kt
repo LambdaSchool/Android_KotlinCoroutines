@@ -2,7 +2,10 @@ package com.example.android_kotlincoroutines
 
 
 import android.support.annotation.WorkerThread
-import java.io.*
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStream
+import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.MalformedURLException
 import java.net.URL
@@ -15,7 +18,12 @@ object NetworkAdapter {
     const val TIMEOUT = 3000
 
     @WorkerThread
-    fun httpRequest(stringUrl: String, requestType: String, jsonBody: String?,headerProperties: Map<String, String>? = null): Pair<Boolean, String> {
+    fun httpRequest(
+        stringUrl: String,
+        requestType: String,
+        jsonBody: String?,
+        headerProperties: Map<String, String>? = null
+    ): Pair<Boolean, String> {
         var result = ""
         var success = false
         var stream: InputStream? = null
@@ -29,7 +37,7 @@ object NetworkAdapter {
             connection.setRequestProperty("Content-Type", "application/json")
 
             if (headerProperties != null) {
-                for((key, value) in headerProperties) {
+                for ((key, value) in headerProperties) {
                     connection.setRequestProperty(key, value)
                 }
             }

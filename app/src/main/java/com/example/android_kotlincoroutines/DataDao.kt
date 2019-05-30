@@ -17,8 +17,8 @@ object DataDao {
         return diversion ?: Diversion()
     }
 
-    fun getDiversionByKey(key:String): Diversion? {
-        val (success, result) = NetworkAdapter.httpRequest("$API_URL", NetworkAdapter.GET, "")
+    fun getDiversionByKey(key: String): Diversion? {
+        val (success, result) = NetworkAdapter.httpRequest("$API_URL$KEY_URL$key", NetworkAdapter.GET, "")
         var diversion: Diversion? = null
         if (success == true) {
             diversion = Json.nonstrict.parse(Diversion.serializer(), result)

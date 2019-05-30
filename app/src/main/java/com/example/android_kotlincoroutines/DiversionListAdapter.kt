@@ -94,15 +94,15 @@ class DiversionListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             diversionHolder.itemView.setOnClickListener{
                 val intent = Intent(diversionHolder.itemView.context, DetailActivity::class.java)
                 intent.putExtra(DetailActivity.DETAIL_ITEM,element.key)
-                ContextCompat.startActivity(diversionHolder.itemView.context, intent, null)
+                startActivity(diversionHolder.itemView.context, intent, null)
 
             }
 
             diversionHolder.diversionNameView.text = element.activity
             val cost: String = when {
-                element.price!! < .333 -> "$"
-                element.price < .666 -> "$$"
-                else -> "$$$"
+                element.price!! < .333 -> "Low Cost"
+                element.price < .666 -> "Med Cost"
+                else -> "High Cost"
             }
             diversionHolder.diversionPriceView.text = cost
         }
