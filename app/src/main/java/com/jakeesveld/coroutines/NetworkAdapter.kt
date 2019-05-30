@@ -11,13 +11,9 @@ import java.net.HttpURLConnection
 import java.net.MalformedURLException
 import java.net.URL
 object NetworkAdapter {
-    interface NetworkCallback {
-        fun returnResult(success: Boolean?, result: String)
-        fun returnImageResult(success: Boolean?, result: Bitmap?, requestUrl: String)
-    }
 
     @WorkerThread
-    fun httpGetRequest(urlString: String, callback: NetworkCallback) {
+    fun httpGetRequest(urlString: String): String {
         var result = ""
         var success = false
         var connection: HttpURLConnection? = null
@@ -59,14 +55,12 @@ object NetworkAdapter {
                 }
 
             }
-
-            callback.returnResult(success, result)
+            return result
         }
-        //                return result;
     }
 
     @WorkerThread
-    fun getBitmapFromURL(urlString: String, callback: NetworkCallback) {
+    fun getBitmapFromURL(urlString: String): Bitmap? {
         var result: Bitmap? = null
         var connection: HttpURLConnection? = null
         try {
@@ -86,6 +80,6 @@ object NetworkAdapter {
         } finally {
             connection?.disconnect()
         }
-        callback.returnImageResult(true, result, urlString)
+        return result
     }
 }
