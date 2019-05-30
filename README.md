@@ -1,21 +1,20 @@
-# Kotlin Coroutine
+# Android_Kotlin_RecyclerView
 
-Take your recycler view you built previously, adapt it to use coroutines instead of a Thread object. Add a detail view.
+Choose a free API and build an app with a recycler view around it.
 
 ## Requirements
 
-Take your existing recycler view, change it to perform the network calls with coroutines. Add a detail view. In this view, perform another network call with a coroutine
+In this app, you'll explore Kotlin in Android for the first time. You'll take advantage of a new bleeding edge library called KotlinX Serialization to work with JSON. You'll interact with an online database to get data, parse it, and display it in a recycler view.
 
 ## Steps
+1. Find an online API you would like to work with and get it working in Postman
+2. Add and test KotlinX Serialization Library
+2. Generate or write rough Kotlin classes
+3. Test classes with the library
+4. Add recycler view
 
-1. Change ListAdapter, DAO, and NetworkAdapter to use coroutines.
-2. Add a detail view for the items in the list
-3. In that view, perform another network call
-   1. This can be downloading a image, or performing any other call if your api doesn't support images
 
 ## Go Further
 
-- Add stretch goals from previous assignment
-  - Add a header and footer to your view
-  - Add pagination (load more items when you get to the end of the existing ones)
-- Polish the detail view.
+* Add a header and footer to your view
+* Add pagination (load more items when you get to the end of the existing ones)
