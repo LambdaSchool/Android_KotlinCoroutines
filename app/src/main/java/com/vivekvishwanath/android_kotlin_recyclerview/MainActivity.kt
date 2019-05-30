@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val pokemonList = ArrayList<Pokemon>()
         val pokemonDao = PokemonApiDao()
-        val viewAdapter = PokemonListAdapter(pokemonList)
+        val viewAdapter = PokemonListAdapter(pokemonList, this)
         val viewManager: RecyclerView.LayoutManager = LinearLayoutManager(applicationContext)
         val dataJob = Job()
         val dataScope = CoroutineScope(Dispatchers.IO + dataJob)
