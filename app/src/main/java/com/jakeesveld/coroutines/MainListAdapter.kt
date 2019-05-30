@@ -4,9 +4,10 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.main_list_item.view.*
-import java.lang.Character
 
 class MainListAdapter(val dataList: List<com.jakeesveld.coroutines.Character>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -15,12 +16,14 @@ class MainListAdapter(val dataList: List<com.jakeesveld.coroutines.Character>): 
         val characterSpecies: TextView = view.text_character_species
         val characterGender: TextView = view.text_character_gender
         val characterStatus: TextView = view.text_character_status
+        val characterImage: ImageView = view.character_image
 
         fun bindModel(character: com.jakeesveld.coroutines.Character){
-            characterGender.text = character.gender
+            characterGender.text = "Gender: ${character.gender}"
             characterName.text = character.name
-            characterSpecies.text = character.species
-            characterStatus.text = character.status
+            characterSpecies.text = "Species: ${character.species}"
+            characterStatus.text = "Status: ${character.status}"
+            Picasso.get().load(character.image).into(characterImage)
         }
     }
 

@@ -15,7 +15,6 @@ object NetworkAdapter {
     @WorkerThread
     fun httpGetRequest(urlString: String): String {
         var result = ""
-        var success = false
         var connection: HttpURLConnection? = null
         var stream: InputStream? = null
         try {
@@ -35,7 +34,6 @@ object NetworkAdapter {
                         line = reader.readLine()
                     }
                     result = builder.toString()
-                    success = true
                 }
             } else {
                 result = responseCode.toString()
@@ -59,27 +57,4 @@ object NetworkAdapter {
         }
     }
 
-    @WorkerThread
-    fun getBitmapFromURL(urlString: String): Bitmap? {
-        var result: Bitmap? = null
-        var connection: HttpURLConnection? = null
-        try {
-
-            val url = URL(urlString)
-            connection = url.openConnection() as HttpURLConnection
-            connection.doInput = true
-            connection.connect()
-            val input = connection.inputStream
-
-            result = BitmapFactory.decodeStream(input)
-//            Log.i("Bitmaps", String.format("thumb %d", result.byteCount))
-
-
-        } catch (e: IOException) {
-            e.printStackTrace()
-        } finally {
-            connection?.disconnect()
-        }
-        return result
-    }
 }
