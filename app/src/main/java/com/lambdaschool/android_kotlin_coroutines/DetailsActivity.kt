@@ -64,7 +64,7 @@ class DetailsActivity : AppCompatActivity() {
 
             withContext(Dispatchers.IO) {
                 dataWait()
-                val result = HisNetworkAdapter.getBitmapFromURL(superHero.image?.url ?: "")
+                val result = HisNetworkAdapter.getBitmapFromURL(superHero.getImageUrl())
 
                 if (result.first && result.second != null) {
                     image = result.second
@@ -86,4 +86,8 @@ class DetailsActivity : AppCompatActivity() {
 
 private suspend fun dataWait() {
     delay(1000)
+}
+
+fun SuperHero.getImageUrl():String {
+    return this.image?.url?:""
 }
