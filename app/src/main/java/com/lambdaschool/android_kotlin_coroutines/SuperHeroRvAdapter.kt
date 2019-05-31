@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import kotlinx.android.synthetic.main.recycler_view_element.view.*
 import kotlinx.android.synthetic.main.recycler_view_footer.view.*
 import kotlinx.coroutines.*
@@ -61,16 +62,12 @@ class SuperHeroRvAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private fun getList(id: Int = 1) {
         val adapter = this
         var oldData: MutableList<SuperHero> = mutableListOf()
-        var diffResult: DiffUtil.DiffResult=DiffUtil.calculateDiff(CharacterDiffTool(oldData, data))
+        var diffResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(CharacterDiffTool(oldData, data))
 
         workerScope.launch {
             withContext(Dispatchers.IO) {
-                //Thread(Runnable {
                 val result =
                     HisNetworkAdapter.httpGetRequest("https://www.superheroapi.com/api.php/10220044976853570/search/man")
-                //HisNetworkAdapter.httpGetRequest("https://www.superheroapi.com/api.php/10220044976853570/$id",
-                //object : HisNetworkAdapter.NetworkHttpCallback {
-                //override fun returnResult(success: Boolean?, result: String) {
                 oldData = mutableListOf<SuperHero>()
                 oldData.addAll(data)
 
@@ -79,17 +76,13 @@ class SuperHeroRvAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
                 diffResult = DiffUtil.calculateDiff(CharacterDiffTool(oldData, data))
             }
-            //activity.runOnUiThread {
+
             if (oldData.size == 0) {
                 notifyDataSetChanged()
             } else {
                 diffResult.dispatchUpdatesTo(adapter)
             }
         }
-        // }
-        //}
-        // })
-        //}).start()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -146,6 +139,10 @@ class SuperHeroRvAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     }
                 }
             }
+        }
+
+        holder.itemView.setOnClickListener {
+            Toast.makeText(holder.itemView.context,"Item $position clicked",Toast.LENGTH_SHORT).show()
         }
     }
 
