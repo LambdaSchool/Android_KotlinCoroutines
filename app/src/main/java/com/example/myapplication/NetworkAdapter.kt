@@ -18,7 +18,7 @@ object NetworkAdapter {
     }
 
     @WorkerThread
-    fun httpGetRequest(urlString: String, callback: NetworkCallback) {
+    suspend fun httpGetRequest(urlString: String, callback: NetworkCallback) {
         var result = ""
         var success = false
         var connection: HttpURLConnection? = null
@@ -67,7 +67,7 @@ object NetworkAdapter {
     }
 
     @WorkerThread
-    fun getBitmapFromURL(urlString: String, callback: NetworkCallback) {
+    suspend fun getBitmapFromURL(urlString: String, callback: NetworkCallback) {
         var result: Bitmap? = null
         var connection: HttpURLConnection? = null
         try {
