@@ -1,7 +1,8 @@
 package com.lambdaschool.android_kotlin_coroutines
 
-import android.app.Activity
+import android.content.Intent
 import android.graphics.Bitmap
+import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -142,7 +143,10 @@ class SuperHeroRvAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
 
         holder.itemView.setOnClickListener {
-            Toast.makeText(holder.itemView.context,"Item $position clicked",Toast.LENGTH_SHORT).show()
+            //Toast.makeText(holder.itemView.context, "Item $position clicked", Toast.LENGTH_SHORT).show()
+            val intent = Intent(holder.itemView.context, DetailsActivity::class.java)
+            intent.putExtra("superhero", data[position].id)
+            holder.itemView.context.startActivity(intent)
         }
     }
 
