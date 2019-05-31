@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.recycler_view_element.view.*
 import kotlinx.android.synthetic.main.recycler_view_footer.view.*
+import kotlinx.coroutines.*
 import kotlinx.serialization.json.Json
 
 class CharacterDiffTool(private val oldData: List<SuperHero>, private val newData: List<SuperHero>) :
@@ -28,58 +29,67 @@ class CharacterDiffTool(private val oldData: List<SuperHero>, private val newDat
 
 }
 
-class SuperHeroRvAdapter(val activity: Activity) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class SuperHeroRvAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {
         private const val TYPE_FOOTER = 1
         private const val TYPE_ITEM = 2
     }
 
     private val data = mutableListOf<SuperHero>()
+    private val dataJob = Job()
+    private val workerScope = CoroutineScope(Dispatchers.Main + dataJob)
 
     open class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val elementImageView: ImageView = view.element_image
         val elementTextView: TextView = view.element_text
+        val imageJob = Job()
+        val imageScope = CoroutineScope(Dispatchers.Main + imageJob)
 
         fun bindModel(superhero: SuperHero) {
             elementTextView.text = superhero.name
         }
     }
 
-    init {
-        //for (i in 1..20 )
-        getList(644)
-    }
-
     open class FooterViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val countTextView: TextView = view.count_view
     }
 
+    init {
+        getList(644)
+    }
+
     private fun getList(id: Int = 1) {
         val adapter = this
+        var oldData: MutableList<SuperHero> = mutableListOf()
+        var diffResult: DiffUtil.DiffResult=DiffUtil.calculateDiff(CharacterDiffTool(oldData, data))
 
-        Thread(Runnable {
-            HisNetworkAdapter.httpGetRequest("https://www.superheroapi.com/api.php/10220044976853570/search/man",
+        workerScope.launch {
+            withContext(Dispatchers.IO) {
+                //Thread(Runnable {
+                val result =
+                    HisNetworkAdapter.httpGetRequest("https://www.superheroapi.com/api.php/10220044976853570/search/man")
                 //HisNetworkAdapter.httpGetRequest("https://www.superheroapi.com/api.php/10220044976853570/$id",
-                object : HisNetworkAdapter.NetworkHttpCallback {
-                    override fun returnResult(success: Boolean?, result: String) {
-                        val oldData = mutableListOf<SuperHero>()
-                        oldData.addAll(data)
+                //object : HisNetworkAdapter.NetworkHttpCallback {
+                //override fun returnResult(success: Boolean?, result: String) {
+                oldData = mutableListOf<SuperHero>()
+                oldData.addAll(data)
 
-                        val superheros: SuperHeroResult = Json.nonstrict.parse(SuperHeroResult.serializer(), result)
-                        data.addAll(superheros.results.orEmpty())
+                val superheros: SuperHeroResult = Json.nonstrict.parse(SuperHeroResult.serializer(), result)
+                data.addAll(superheros.results.orEmpty())
 
-                        val diffResult = DiffUtil.calculateDiff(CharacterDiffTool(oldData, data))
-
-                        activity.runOnUiThread {
-                            if (oldData.size == 0) {
-                                notifyDataSetChanged()
-                            } else {
-                                diffResult.dispatchUpdatesTo(adapter)
-                            }
-                        }
-                    }
-                })
-        }).start()
+                diffResult = DiffUtil.calculateDiff(CharacterDiffTool(oldData, data))
+            }
+            //activity.runOnUiThread {
+            if (oldData.size == 0) {
+                notifyDataSetChanged()
+            } else {
+                diffResult.dispatchUpdatesTo(adapter)
+            }
+        }
+        // }
+        //}
+        // })
+        //}).start()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -113,23 +123,29 @@ class SuperHeroRvAdapter(val activity: Activity) : RecyclerView.Adapter<Recycler
             if (position == (data.size - 4)) {
                 getList(data.size)
             }
-            Thread(Runnable {
-                HisNetworkAdapter.getBitmapFromURL(
-                    data[position].image?.url ?: "",
-                    object : HisNetworkAdapter.NetworkBitmapCallback {
 
-                        override fun returnResult(success: Boolean?, result: Bitmap?, requestUrl: String) {
-                            if (itemHolder.elementTextView.text == data[position].name) {
-                                activity.runOnUiThread {
-                                    itemHolder.elementImageView.setImageBitmap(result)
-                                }
-                            } else {
+            holder.imageScope.launch {
 
-                            }
-                        }
+                var image: Bitmap? = null
 
-                    })
-            }).start()
+                withContext(Dispatchers.IO) {
+
+                    val result = HisNetworkAdapter.getBitmapFromURL(data[position].image?.url ?: "")
+
+                    if (result.first && result.second != null) {
+                        image = result.second
+                    }
+
+                    image?.let { image = it }
+                }
+
+                image.let {
+
+                    if (itemHolder.elementTextView.text == data[position].name) {
+                        itemHolder.elementImageView.setImageBitmap(it)
+                    }
+                }
+            }
         }
     }
 

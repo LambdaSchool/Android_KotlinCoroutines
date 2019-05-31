@@ -17,13 +17,11 @@ class MainActivity : AppCompatActivity() {
         var classNameReflection: String? = this::class.simpleName
         var methodNameReflection: String? = this::getLocalClassName.javaClass.enclosingMethod.name
 
-        val viewAdapter = SuperHeroRvAdapter(this)
-        (this as Activity).runOnUiThread {
-            recycler_view.apply {
-                setHasFixedSize(false)
-                layoutManager = LinearLayoutManager(applicationContext)
-                adapter = viewAdapter
-            }
+        val viewAdapter = SuperHeroRvAdapter()
+        recycler_view.apply {
+            setHasFixedSize(false)
+            layoutManager = LinearLayoutManager(applicationContext)
+            adapter = viewAdapter
         }
 
 /*        Thread(Runnable {

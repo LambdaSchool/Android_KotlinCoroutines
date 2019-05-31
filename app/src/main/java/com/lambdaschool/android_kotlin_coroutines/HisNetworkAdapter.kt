@@ -14,12 +14,8 @@ import java.net.URL
 
 object HisNetworkAdapter {
 
-    interface NetworkHttpCallback {
-        fun returnResult(success: Boolean?, result: String)
-    }
-
     @WorkerThread
-    fun httpGetRequest(urlString: String, httpCallback: NetworkHttpCallback) {
+    fun httpGetRequest(urlString: String): String {
         var result = ""
         var success = false
         var connection: HttpURLConnection? = null
@@ -62,16 +58,12 @@ object HisNetworkAdapter {
 
             }
 
-            httpCallback.returnResult(success, result)
+            return result
         }
     }
 
-    interface NetworkBitmapCallback {
-        fun returnResult(success: Boolean?, result: Bitmap?, requestUrl: String)
-    }
-
     @WorkerThread
-    fun getBitmapFromURL(urlString: String, callback: NetworkBitmapCallback) {
+    fun getBitmapFromURL(urlString: String): Triple<Boolean, Bitmap?, String> {
         var result: Bitmap? = null
         var success = false
         var connection: HttpURLConnection? = null
@@ -82,9 +74,7 @@ object HisNetworkAdapter {
             connection.doInput = true
             connection.connect()
             val input = connection.inputStream
-
             result = BitmapFactory.decodeStream(input)
-            Log.i("Bitmaps", String.format("thumb %d", result.byteCount))
             success = true
 
         } catch (e: IOException) {
@@ -92,6 +82,7 @@ object HisNetworkAdapter {
         } finally {
             connection?.disconnect()
         }
-        callback.returnResult(success, result, urlString)
+
+        return Triple(true, result, urlString)
     }
 }

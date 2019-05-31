@@ -18,7 +18,6 @@ object MyNetworkAdapter {
     private val READ_TIMEOUT = 3000
     private val CONNECT_TIMEOUT = 3000
 
-    @JvmOverloads
     fun httpRequest(
         url: String,
         requestMethod: String = REQUEST_GET,
